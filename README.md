@@ -1,9 +1,11 @@
 # AnyBarcode
 [![nuget](https://img.shields.io/nuget/v/AnyBarcode.svg)](https://www.nuget.org/packages/AnyBarcode/)
 [![nuget](https://img.shields.io/nuget/dt/AnyBarcode.svg)](https://www.nuget.org/packages/AnyBarcode/)
-[![Build status](https://ci.appveyor.com/api/projects/status/xr7gebcdins0hs4f?svg=true)](https://ci.appveyor.com/project/MichaelBrown/AnyBarcode)
+[![Build status](https://ci.appveyor.com/api/projects/status/wgp09j4vbwnivgmu?svg=true)](https://ci.appveyor.com/project/MichaelBrown/AnyBarcode)
 
-A cross-platform barcode generation library for CSharp, based on the original library by [Brad Barnhill](https://github.com/barnhill/barcodelib).
+A cross-platform barcode image generation library for CSharp. AnyBarcode is built on .Net and supports Windows and most Unix environments.
+
+AnyBarcode was originally based on [BarcodeLib](https://github.com/barnhill/barcodelib) library by Brad Barnhill.
 
 |   Supported   |  Symbology    | List  |
 | :------------- | :------------- | :-----|
