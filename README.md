@@ -1,6 +1,6 @@
 # AnyBarcode
-[![nuget](https://img.shields.io/nuget/v/AnyClone.svg)](https://www.nuget.org/packages/AnyBarcode/)
-[![nuget](https://img.shields.io/nuget/dt/AnyClone.svg)](https://www.nuget.org/packages/AnyBarcode/)
+[![nuget](https://img.shields.io/nuget/v/AnyBarcode.svg)](https://www.nuget.org/packages/AnyBarcode/)
+[![nuget](https://img.shields.io/nuget/dt/AnyBarcode.svg)](https://www.nuget.org/packages/AnyBarcode/)
 [![Build status](https://ci.appveyor.com/api/projects/status/xr7gebcdins0hs4f?svg=true)](https://ci.appveyor.com/project/MichaelBrown/AnyBarcode)
 
 A cross-platform barcode generation library for CSharp, based on the original library by [Brad Barnhill](https://github.com/barnhill/barcodelib).
