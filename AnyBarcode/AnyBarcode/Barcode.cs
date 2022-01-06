@@ -490,6 +490,7 @@ namespace AnyBarcode
 
             var dtStartTime = DateTime.Now;
 
+            var fontDimensions = LabelWriter.GetFontDimensions(this, LabelFont);
             switch (BarcodeType)
             {
                 case BarcodeType.Itf14:
@@ -510,10 +511,10 @@ namespace AnyBarcode
                         }
                         Height = (int?)(Width / AspectRatio) ?? Height;
 
-                        var ILHeight = Height;
+                        var ilHeight = (float)Height;
                         if (IncludeLabel)
                         {
-                            ILHeight -= LabelFont.LineHeight;
+                            ilHeight -= fontDimensions.Height;
                         }
 
                         image = CreateBitmap<TPixel>(Width, Height);
@@ -534,7 +535,6 @@ namespace AnyBarcode
 
                         // lines are barWidth wide so draw the appropriate color line vertically
                         var pen = Pens.Solid(ForeColor, barWidth);
-                        // pen.Alignment = PenAlignment.Right; (no known setting for ImageSharp)
 
                         while (pos < EncodedValue.Length)
                         {
@@ -550,15 +550,12 @@ namespace AnyBarcode
                         }
 
                         // bearer bars
-                        pen = Pens.Solid(ForeColor, ILHeight / 8f);
-                        //pen.Width = (float)ILHeight / 8;
-                        //pen.Color = ForeColor;
-                        //pen.Alignment = PenAlignment.Center; (no known setting for ImageSharp)
+                        pen = Pens.Solid(ForeColor, ilHeight / 8f);
 
-                        image.Mutate(c => c.DrawLines(pen, new Point(0, 0), new Point(image.Width, 0))); // top
-                        image.Mutate(c => c.DrawLines(pen, new Point(0, ILHeight), new Point(image.Width, ILHeight))); // bottom
-                        image.Mutate(c => c.DrawLines(pen, new Point(0, 0), new Point(0, ILHeight))); // left
-                        image.Mutate(c => c.DrawLines(pen, new Point(image.Width, 0), new Point(image.Width, ILHeight))); // right
+                        image.Mutate(c => c.DrawLines(pen, new PointF(0, 0), new PointF(image.Width, 0))); // top
+                        image.Mutate(c => c.DrawLines(pen, new PointF(0, ilHeight), new PointF(image.Width, ilHeight))); // bottom
+                        image.Mutate(c => c.DrawLines(pen, new PointF(0, 0), new PointF(0, ilHeight))); // left
+                        image.Mutate(c => c.DrawLines(pen, new PointF(image.Width, 0), new PointF(image.Width, ilHeight))); // right
 
                         if (IncludeLabel)
                             LabelWriter.LabelITF14<TPixel>(this, image);
@@ -573,11 +570,11 @@ namespace AnyBarcode
                         // Automatically calculate Height if applicable.
                         Height = (int?)(Width / AspectRatio) ?? Height;
 
-                        var ILHeight = Height;
-                        var topLabelAdjustment = 0;
+                        var ilHeight = Height;
+                        var topLabelAdjustment = 0f;
 
                         var shiftAdjustment = 0;
-                        var iBarWidth = Width / EncodedValue.Length;
+                        var barWidth = Width / EncodedValue.Length;
 
                         // set alignment
                         switch (Alignment)
@@ -603,42 +600,50 @@ namespace AnyBarcode
                                 var labTxt = defTxt.Substring(0, 1) + "--" + defTxt.Substring(1, 6) + "--" + defTxt.Substring(7);
                                 var fontSize = LabelWriter.GetFontsize(this, Width, Height, labTxt) * DotsPerPointAt96Dpi;
                                 var labFont = new Font(LabelFont, fontSize, FontStyle.Regular);
+                                var labFontDimensions = LabelWriter.GetFontDimensions(this, labFont);
                                 LabelFont = labFont;
-                                ILHeight -= (labFont.LineHeight / 2);
-                                iBarWidth = Width / EncodedValue.Length;
+                                ilHeight -= (int)(labFontDimensions.Height / 2);
+                                barWidth = Width / EncodedValue.Length;
                             }
                             else
                             {
                                 // Shift drawing down if top label.
                                 if ((LabelPosition & (LabelPositions.TopCenter | LabelPositions.TopLeft | LabelPositions.TopRight)) > 0)
-                                    topLabelAdjustment = LabelFont.LineHeight;
+                                    topLabelAdjustment = fontDimensions.Height;
 
-                                ILHeight -= LabelFont.LineHeight;
+                                ilHeight -= (int)LabelWriter.GetFontDimensions(this, LabelFont).Height;
                             }
                         }
 
                         image = CreateBitmap<TPixel>(Width, Height);
                         var iBarWidthModifier = 1;
-                        if (iBarWidth <= 0)
+                        if (barWidth <= 0)
                             throw new BarcodeException("Image size specified not large enough to draw image. (Bar size determined to be less than 1 pixel)");
 
                         // draw image
                         var pos = 0;
-                        var halfBarWidth = (int)(iBarWidth * 0.5);
+                        var halfBarWidth = (int)(barWidth * 0.5);
 
                         // clears the image and colors the entire background
                         image.Mutate(c => c.Clear(BackColor));
 
-                        var backPen = Pens.Solid(BackColor, iBarWidth / iBarWidthModifier);
-                        var pen = Pens.Solid(ForeColor, iBarWidth / iBarWidthModifier);
+                        var backPen = Pens.Solid(BackColor, barWidth / iBarWidthModifier);
+                        var pen = Pens.Solid(ForeColor, barWidth / iBarWidthModifier);
+                        var options = new DrawingOptions
+                        {
+                            GraphicsOptions = new GraphicsOptions
+                            {
+                                Antialias = false
+                            },
+                        };
                         // lines are fBarWidth wide so draw the appropriate color line vertically
                         while (pos < EncodedValue.Length)
                         {
                             if (EncodedValue[pos] == '1')
                             {
-                                var startPoint = new Point(pos * iBarWidth + shiftAdjustment + halfBarWidth, topLabelAdjustment);
-                                var endPoint = new Point(pos * iBarWidth + shiftAdjustment + halfBarWidth, ILHeight + topLabelAdjustment);
-                                image.Mutate(c => c.DrawLines(pen, startPoint, endPoint));
+                                var startPoint = new PointF(pos * barWidth + shiftAdjustment + halfBarWidth, topLabelAdjustment);
+                                var endPoint = new PointF(pos * barWidth + shiftAdjustment + halfBarWidth, ilHeight + topLabelAdjustment);
+                                image.Mutate(c => c.DrawLines(options, pen, startPoint, endPoint));
                             }
 
                             pos++;
@@ -666,8 +671,8 @@ namespace AnyBarcode
                         // Automatically calculate Height if applicable.
                         Height = (int?)(Width / AspectRatio) ?? Height;
 
-                        var ILHeight = Height;
-                        var topLabelAdjustment = 0;
+                        var ilHeight = (float)Height;
+                        var topLabelAdjustment = 0f;
 
                         var shiftAdjustment = 0;
 
@@ -696,16 +701,17 @@ namespace AnyBarcode
 
                                 var fontSize = LabelWriter.GetFontsize(this, Width, Height, labTxt) * DotsPerPointAt96Dpi;
                                 var labFont = new Font(LabelFont, fontSize, FontStyle.Regular);
+                                var labFontDimensions = LabelWriter.GetFontDimensions(this, labFont);
                                 LabelFont = labFont;
-                                ILHeight -= (labFont.LineHeight / 2);
+                                ilHeight -= (labFontDimensions.Height / 2);
                             }
                             else
                             {
                                 // Shift drawing down if top label.
                                 if ((LabelPosition & (LabelPositions.TopCenter | LabelPositions.TopLeft | LabelPositions.TopRight)) > 0)
-                                    topLabelAdjustment = LabelFont.LineHeight;
+                                    topLabelAdjustment = fontDimensions.Height;
 
-                                ILHeight -= LabelFont.LineHeight;
+                                ilHeight -= fontDimensions.Height;
                             }
                         }
 
@@ -729,8 +735,8 @@ namespace AnyBarcode
                         {
                             if (EncodedValue[pos] == '1')
                             {
-                                var startPoint = new Point(pos * iBarWidth + shiftAdjustment + halfBarWidth, topLabelAdjustment);
-                                var endPoint = new Point(pos * iBarWidth + shiftAdjustment + halfBarWidth, ILHeight + topLabelAdjustment);
+                                var startPoint = new PointF(pos * iBarWidth + shiftAdjustment + halfBarWidth, topLabelAdjustment);
+                                var endPoint = new PointF(pos * iBarWidth + shiftAdjustment + halfBarWidth, ilHeight + topLabelAdjustment);
                                 image.Mutate(c => c.DrawLines(pen, startPoint, endPoint));
                             }
 
@@ -759,16 +765,16 @@ namespace AnyBarcode
                         // Automatically calculate Height if applicable.
                         Height = (int?)(Width / AspectRatio) ?? Height;
 
-                        var ILHeight = Height;
-                        var topLabelAdjustment = 0;
+                        var ilHeight = (float)Height;
+                        var topLabelAdjustment = 0f;
 
                         if (IncludeLabel)
                         {
                             // Shift drawing down if top label.
                             if ((LabelPosition & (LabelPositions.TopCenter | LabelPositions.TopLeft | LabelPositions.TopRight)) > 0)
-                                topLabelAdjustment = LabelFont.LineHeight;
+                                topLabelAdjustment = fontDimensions.Height;
 
-                            ILHeight -= LabelFont.LineHeight;
+                            ilHeight -= fontDimensions.Height;
                         }
 
 
@@ -812,17 +818,17 @@ namespace AnyBarcode
                         {
                             if (BarcodeType == BarcodeType.PostNet)
                             {
-                                //draw half bars in postnet
+                                // draw half bars in postnet
                                 if (EncodedValue[pos] == '0')
                                 {
-                                    var startPoint = new Point(pos * iBarWidth + shiftAdjustment + halfBarWidth, ILHeight + topLabelAdjustment);
-                                    var endPoint = new Point(pos * iBarWidth + shiftAdjustment + halfBarWidth, (ILHeight / 2) + topLabelAdjustment);
+                                    var startPoint = new PointF(pos * iBarWidth + shiftAdjustment + halfBarWidth, ilHeight + topLabelAdjustment);
+                                    var endPoint = new PointF(pos * iBarWidth + shiftAdjustment + halfBarWidth, (ilHeight / 2) + topLabelAdjustment);
                                     image.Mutate(c => c.DrawLines(pen, startPoint, endPoint));
                                 }
                                 else
                                 {
-                                    var startPoint = new Point(pos * iBarWidth + shiftAdjustment + halfBarWidth, ILHeight + topLabelAdjustment);
-                                    var endPoint = new Point(pos * iBarWidth + shiftAdjustment + halfBarWidth, topLabelAdjustment);
+                                    var startPoint = new PointF(pos * iBarWidth + shiftAdjustment + halfBarWidth, ilHeight + topLabelAdjustment);
+                                    var endPoint = new PointF(pos * iBarWidth + shiftAdjustment + halfBarWidth, topLabelAdjustment);
                                     image.Mutate(c => c.DrawLines(pen, startPoint, endPoint));
                                 }
                             }
@@ -830,8 +836,8 @@ namespace AnyBarcode
                             {
                                 if (EncodedValue[pos] == '1')
                                 {
-                                    var startPoint = new Point(pos * iBarWidth + shiftAdjustment + halfBarWidth, topLabelAdjustment);
-                                    var endPoint = new Point(pos * iBarWidth + shiftAdjustment + halfBarWidth, ILHeight + topLabelAdjustment);
+                                    var startPoint = new PointF(pos * iBarWidth + shiftAdjustment + halfBarWidth, topLabelAdjustment);
+                                    var endPoint = new PointF(pos * iBarWidth + shiftAdjustment + halfBarWidth, ilHeight + topLabelAdjustment);
                                     image.Mutate(c => c.DrawLines(pen, startPoint, endPoint));
                                 }
                             }
