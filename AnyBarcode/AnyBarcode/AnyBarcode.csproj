@@ -28,9 +28,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="Fonts\micross.ttf">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    <EmbeddedResource Include="Fonts\micross.ttf">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </EmbeddedResource>
   </ItemGroup>
 
   <ItemGroup>

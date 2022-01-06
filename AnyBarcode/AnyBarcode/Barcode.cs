@@ -20,9 +20,10 @@ namespace AnyBarcode
     {
         internal const string DefaultFontName = "Microsoft Sans Serif";
         internal const string DefaultFontFile = "micross.ttf";
-        internal const string FontsPath = $"./Fonts";
+        internal const string FontsPath = $"Fonts";
         private static Lazy<FontCollection> _fontCollection = new Lazy<FontCollection>(() => new FontCollection());
-        private static Lazy<FontFamily> _fontFamily = new Lazy<FontFamily>(() => _fontCollection.Value.Install($"{FontsPath}/{DefaultFontFile}"));
+        private static Lazy<FontFamily> _fontFamily = new Lazy<FontFamily>(() =>
+            _fontCollection.Value.Install(ResourceLoader.LoadResourceStream($"{FontsPath}.{DefaultFontFile}")));
 
 
         /// <summary>
@@ -258,7 +259,7 @@ namespace AnyBarcode
         /// <param name="width">Width of the resulting barcode.(pixels)</param>
         /// <param name="height">Height of the resulting barcode.(pixels)</param>
         /// <returns>Image representing the barcode.</returns>
-        public Image<TPixel> Encode<TPixel>(string stringToEncode, BarcodeType barcodeType, int width, int height) 
+        public Image<TPixel> Encode<TPixel>(string stringToEncode, BarcodeType barcodeType, int width, int height)
             where TPixel : unmanaged, IPixel<TPixel>
         {
             Width = width;
@@ -1060,7 +1061,7 @@ namespace AnyBarcode
                 }
             }
         }
-        
+
         /// <summary>
         /// Get a SaveData object from a json formatted stream
         /// </summary>
@@ -1115,7 +1116,7 @@ namespace AnyBarcode
         {
             try
             {
-                if(saveData is null) throw new ArgumentNullException(nameof(saveData));
+                if (saveData is null) throw new ArgumentNullException(nameof(saveData));
 
                 // loading it to memory stream and then to image object
                 using var ms = new MemoryStream(Convert.FromBase64String(saveData.Image));
