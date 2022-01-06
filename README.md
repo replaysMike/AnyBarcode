@@ -46,12 +46,12 @@ Generate a UPCA barcode with a label overlay:
 var barcode = new Barcode();
 var barcodeImage = barcode.Encode<Rgba32>("0123456789", BarcodeType.Upca, 290, 120, true);
 ```
-![UPCA Barcode](https://github.com/replaysMike/AnyBarcode/wiki/screenshots/upca.png)
+![UPCA Barcode](https://github.com/replaysMike/AnyBarcode/wiki/barcodes/upca.png)
 
 Generate a Code128 barcode with no overlay:
 ```csharp
 var barcode = new Barcode();
-var barcodeImage = barcode.Encode<Rgba32>("0123456789", BarcodeType.Code128, 290, 120);
+var barcodeImage = barcode.Encode<Rgba32>("0123456789", BarcodeType.Code128, 290, 60);
 ```
-![Code128 Barcode](https://github.com/replaysMike/AnyBarcode/wiki/screenshots/code128.png)
+![Code128 Barcode](https://github.com/replaysMike/AnyBarcode/wiki/barcodes/code128.png)
 
