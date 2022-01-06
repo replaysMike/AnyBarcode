@@ -15,7 +15,7 @@ namespace AnyBarcode
         /// <summary>
         /// List of errors
         /// </summary>
-        public List<string> Errors { get; protected set; } = new();
+        public List<string> Errors { get; protected set; } = new List<string>();
 
         public virtual string EncodedValue => throw new NotImplementedException();
 

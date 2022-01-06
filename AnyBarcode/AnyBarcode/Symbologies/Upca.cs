@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Linq;
 
 namespace AnyBarcode.Symbologies
 {
@@ -62,7 +63,11 @@ namespace AnyBarcode.Symbologies
 
             // get the manufacturer assigning country
             InitCountryCodes();
+#if NET48_OR_GREATER
+            var twodigitCode = string.Concat("0", RawData);
+#else
             var twodigitCode = string.Concat("0", RawData.AsSpan(0, 1));
+#endif
             try
             {
                 _countryAssigningManufacturerCode = _countryCodes[twodigitCode]?.ToString() ?? string.Empty;
