@@ -24,13 +24,17 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="any.png" Pack="true" PackagePath="" />
+    <None Remove="Fonts\micross.ttf" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Fonts\micross.ttf">
+    <Content Include="Fonts\micross.ttf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="any.png" Pack="true" PackagePath="" />
   </ItemGroup>
 
   <ItemGroup>
