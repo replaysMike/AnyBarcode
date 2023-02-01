@@ -23,7 +23,7 @@ namespace AnyBarcode
         internal const string FontsPath = $"Fonts";
         private static Lazy<FontCollection> _fontCollection = new Lazy<FontCollection>(() => new FontCollection());
         private static Lazy<FontFamily> _fontFamily = new Lazy<FontFamily>(() =>
-            _fontCollection.Value.Install(ResourceLoader.LoadResourceStream($"{FontsPath}.{DefaultFontFile}")));
+            _fontCollection.Value.Add(ResourceLoader.LoadResourceStream($"{FontsPath}.{DefaultFontFile}")));
 
 
         /// <summary>
