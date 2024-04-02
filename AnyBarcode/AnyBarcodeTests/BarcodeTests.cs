@@ -39,9 +39,11 @@ namespace AnyBarcodeTests
             
             if (ValidateImages)
                 AssertValidateImageEquality(path, stream);
-            else { 
+            else {
                 // everything is fine if no exceptions are thrown
+#pragma warning disable CS0162 // Unreachable code detected
                 Assert.Pass();
+#pragma warning restore CS0162 // Unreachable code detected
             }
         }
 
@@ -60,7 +62,9 @@ namespace AnyBarcodeTests
             else
             {
                 // everything is fine if no exceptions are thrown
+#pragma warning disable CS0162 // Unreachable code detected
                 Assert.Pass();
+#pragma warning restore CS0162 // Unreachable code detected
             }
         }
 
@@ -72,7 +76,9 @@ namespace AnyBarcodeTests
             if (!WriteImages)
                 return pathToFile;
 
+#pragma warning disable CS0162 // Unreachable code detected
             var path = Path.GetDirectoryName(pathToFile);
+#pragma warning restore CS0162 // Unreachable code detected
             if (!Directory.Exists(path))
                 Directory.CreateDirectory(path);
             File.WriteAllBytes(pathToFile, stream.ToArray());
@@ -91,7 +97,7 @@ namespace AnyBarcodeTests
             var referenceBytes = File.ReadAllBytes(path);
             referenceImage.Write(referenceBytes, 0, referenceBytes.Length);
             var areEqual = ImageValidator.AreEqual(referenceImage, generatedImage);
-            Assert.IsTrue(areEqual);
+            Assert.That(areEqual, Is.True);
             return areEqual;
         }
 
@@ -108,7 +114,7 @@ namespace AnyBarcodeTests
             var referenceBytes = File.ReadAllBytes(path);
             referenceImage.Write(referenceBytes, 0, referenceBytes.Length);
             var areSimilar = ImageValidator.AreSimilar(referenceImage, generatedImage, maxDiffPercent);
-            Assert.IsTrue(areSimilar);
+            Assert.That(areSimilar, Is.True);
             return areSimilar;
         }
     }
