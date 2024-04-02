@@ -39,20 +39,18 @@ namespace AnyBarcode
                 // draw datastring under the barcode image centered
                 var text = barcode.AlternateLabel == null ? barcode.Data : barcode.AlternateLabel;
                 var pos = new Point((int)(img.Width / 2f), img.Height - (int)fontDimensions.Height + 1);
-                var textOptions = new TextOptions(font)
+                var textOptions = new RichTextOptions(font)
                 {
                     HorizontalAlignment = HorizontalAlignment.Center,
                     Dpi = barcode.HoritontalResolution,
                     Origin = new System.Numerics.Vector2(pos.X, pos.Y)
                 };
-                //img.Mutate(c => c.DrawText(_drawingOptions, textOptions, text, barcode.ForeColor, new Point((int)(img.Width / 2f), img.Height - (int)fontDimensions.Height + 1)));
                 var brush = new SolidBrush(barcode.ForeColor);
-                img.Mutate(c => c.DrawText(_drawingOptions, textOptions, text, brush, Pens.Solid(barcode.ForeColor, 1)));
 
+                img.Mutate(c => c.DrawText(_drawingOptions, textOptions, text, brush, null));
 
-                // bottom                
-                img.Mutate(c => c.DrawLines(_drawingOptions, Pens.Solid(barcode.ForeColor, img.Height / 16f), new Point(0, img.Height - (int)fontDimensions.Height - 2), new Point(img.Width, img.Height - (int)fontDimensions.Height - 2)));
-                //pen.Alignment = PenAlignment.Inset;
+                // bottom
+                img.Mutate(c => c.DrawLine(_drawingOptions, Pens.Solid(barcode.ForeColor, img.Height / 16f), new Point(0, img.Height - (int)fontDimensions.Height - 2), new Point(img.Width, img.Height - (int)fontDimensions.Height - 2)));
 
                 return img;
             }
@@ -72,7 +70,7 @@ namespace AnyBarcode
             try
             {
                 var font = barcode.LabelFont;
-                var textOptions = new TextOptions(font)
+                var textOptions = new RichTextOptions(font)
                 {
                     HorizontalAlignment = HorizontalAlignment.Left,
                     VerticalAlignment = VerticalAlignment.Top,
@@ -128,8 +126,8 @@ namespace AnyBarcode
                 // draw datastring under the barcode image
                 var text = barcode.AlternateLabel == null ? barcode.Data : barcode.AlternateLabel;
                 var pos = new Point(img.Width, (int)fontDimensions.Height);
-                textOptions.Origin = pos;               
-                img.Mutate(c => c.DrawText(_drawingOptions, textOptions, text, new SolidBrush(barcode.ForeColor), Pens.Solid(barcode.ForeColor, 1)));
+                textOptions.Origin = pos;
+                img.Mutate(c => c.DrawText(_drawingOptions, textOptions, text, new SolidBrush(barcode.ForeColor), null));
 
                 return img;
             }
@@ -189,19 +187,19 @@ namespace AnyBarcode
                 // Draw datastring under the barcode image
                 var smallFont = new Font(labelFont, labelFont.Size * SmallFontScale * Barcode.DotsPerPointAt96Dpi, fontStyle);
                 var smallFontDimensions = GetFontDimensions(barcode, smallFont);
-                var textOptions = new TextOptions(smallFont)
+                var textOptions = new RichTextOptions(smallFont)
                 {
                     HorizontalAlignment = HorizontalAlignment.Left,
                     VerticalAlignment = VerticalAlignment.Top,
                     Dpi = barcode.HoritontalResolution,
                 };
                 textOptions.Origin = new Point((int)s1, (int)(img.Height - (smallFontDimensions.Height * 0.9f)));
-                img.Mutate(c => c.DrawText(_drawingOptions, textOptions, text.Substring(0, 1), Brushes.Solid(barcode.ForeColor), Pens.Solid(barcode.ForeColor, 1)));
+                img.Mutate(c => c.DrawText(_drawingOptions, textOptions, text.Substring(0, 1), Brushes.Solid(barcode.ForeColor), null));
                 textOptions.Origin = new Point((int)s2, (int)labelY);
                 textOptions.Font = labelFont;
-                img.Mutate(c => c.DrawText(_drawingOptions, textOptions, text.Substring(1, 6), Brushes.Solid(barcode.ForeColor), Pens.Solid(barcode.ForeColor, 1)));
+                img.Mutate(c => c.DrawText(_drawingOptions, textOptions, text.Substring(1, 6), Brushes.Solid(barcode.ForeColor), null));
                 textOptions.Origin = new Point((int)s3 - barWidth, (int)labelY);
-                img.Mutate(c => c.DrawText(_drawingOptions, textOptions, text.Substring(7), Brushes.Solid(barcode.ForeColor), Pens.Solid(barcode.ForeColor, 1)));
+                img.Mutate(c => c.DrawText(_drawingOptions, textOptions, text.Substring(7), Brushes.Solid(barcode.ForeColor), null));
 
                 return img;
             }
@@ -266,23 +264,30 @@ namespace AnyBarcode
                 var smallFont = new Font(labelFont, labelFont.Size * SmallFontScale * Barcode.DotsPerPointAt96Dpi, fontStyle);
                 var smallFontDimensions = GetFontDimensions(barcode, smallFont);
 
-                var textOptions = new TextOptions(smallFont)
+                var textOptions = new RichTextOptions(smallFont)
                 {
                     HorizontalAlignment = HorizontalAlignment.Left,
                     VerticalAlignment = VerticalAlignment.Top,
                     Dpi = barcode.HoritontalResolution,
                 };
 
+                // draw far left number
                 textOptions.Origin = new Point((int)s1, img.Height - (int)smallFontDimensions.Height);
-                img.Mutate(c => c.DrawText(_drawingOptions, textOptions, text.Substring(0, 1), Brushes.Solid(barcode.ForeColor), Pens.Solid(barcode.ForeColor, 1)));
+                img.Mutate(c => c.DrawText(_drawingOptions, textOptions, text.Substring(0, 1), Brushes.Solid(barcode.ForeColor), null));
+
+                // draw group 1 number
                 textOptions.Origin = new Point((int)s2 - barWidth + largeShiftAdjustment, (int)labelY);
                 textOptions.Font = labelFont;
-                img.Mutate(c => c.DrawText(_drawingOptions, textOptions, text.Substring(1, 5), Brushes.Solid(barcode.ForeColor), Pens.Solid(barcode.ForeColor, 1)));
+                img.Mutate(c => c.DrawText(_drawingOptions, textOptions, text.Substring(1, 5), Brushes.Solid(barcode.ForeColor), null));
+
+                // draw group 2 number
                 textOptions.Origin = new Point((int)s3 - barWidth + largeShiftAdjustment, (int)labelY);
-                img.Mutate(c => c.DrawText(_drawingOptions, textOptions, text.Substring(6, 5), Brushes.Solid(barcode.ForeColor), Pens.Solid(barcode.ForeColor, 1)));
+                img.Mutate(c => c.DrawText(_drawingOptions, textOptions, text.Substring(6, 5), Brushes.Solid(barcode.ForeColor), null));
+                
+                // draw far right number
                 textOptions.Origin = new Point((int)s4, img.Height - (int)smallFontDimensions.Height);
                 textOptions.Font = smallFont;
-                img.Mutate(c => c.DrawText(_drawingOptions, textOptions, text.Substring(11), Brushes.Solid(barcode.ForeColor), Pens.Solid(barcode.ForeColor, 1)));
+                img.Mutate(c => c.DrawText(_drawingOptions, textOptions, text.Substring(11), Brushes.Solid(barcode.ForeColor), null));
 
                 return img;
             }
@@ -298,7 +303,7 @@ namespace AnyBarcode
             {
                 Dpi = barcode.HoritontalResolution
             };
-            return TextMeasurer.Measure("ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789", textOptions);
+            return TextMeasurer.MeasureSize("ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789", textOptions);
         }
 
         public static float GetFontsize(Barcode barcode, int width, int height, string label)
@@ -317,7 +322,7 @@ namespace AnyBarcode
                     };
 
                     // See how much space the text would need, specifying a maximum width.
-                    var lineBounds = TextMeasurer.Measure(label, textOptions);
+                    var lineBounds = TextMeasurer.MeasureSize(label, textOptions);
                     if ((lineBounds.Width > width) || (lineBounds.Height > height))
                     {
                         fontSize = i - 1;

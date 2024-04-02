@@ -40,7 +40,7 @@ namespace AnyBarcodeTests.Symbologies
                 catch when (expected == null)
                 {
                 }
-                Assert.AreEqual(expected, actual, $"{type}");
+                Assert.That(expected, Is.EqualTo(actual), $"{type}");
             }
         }
     }

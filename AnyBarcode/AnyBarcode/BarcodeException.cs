@@ -1,6 +1,4 @@
-﻿using System.Runtime.Serialization;
-
-namespace AnyBarcode
+﻿namespace AnyBarcode
 {
     [Serializable]
     public class BarcodeException : Exception
@@ -14,10 +12,6 @@ namespace AnyBarcode
         }
 
         public BarcodeException(string message, Exception innerException) : base(message, innerException)
-        {
-        }
-
-        protected BarcodeException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
         }
     }

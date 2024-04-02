@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net6.0;net48</TargetFrameworks>
+    <TargetFrameworks>net6.0</TargetFrameworks>
     <LangVersion>latest</LangVersion>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
@@ -12,7 +12,7 @@
     <RepositoryUrl>https://github.com/replaysMike/AnyBarcode</RepositoryUrl>
     <PackageTags>cross platform barcode upc upca code128 postnet itf14 jan13 msi codabar code39 code93 ean13 ean8 fim refactor michael brown</PackageTags>
     <PackageReleaseNotes>Cross platform Barcode generator</PackageReleaseNotes>
-    <Version>1.0.0</Version>
+    <Version>2.0.0</Version>
     <PackageLicenseExpression>AGPL-3.0-or-later</PackageLicenseExpression>
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
@@ -38,9 +38,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="SixLabors.ImageSharp" Version="2.1.3" />
-    <PackageReference Include="SixLabors.ImageSharp.Drawing" Version="1.0.0-beta15" />
-    <PackageReference Include="System.Text.Json" Version="6.0.1" />
+    <PackageReference Include="SixLabors.ImageSharp" Version="3.1.3" />
+    <PackageReference Include="SixLabors.ImageSharp.Drawing" Version="2.1.2" />
+    <PackageReference Include="System.Text.Json" Version="8.0.3" />
   </ItemGroup>
 
 </Project>

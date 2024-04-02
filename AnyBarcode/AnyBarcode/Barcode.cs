@@ -544,7 +544,7 @@ namespace AnyBarcode
                             {
                                 var startPoint = new Point((pos * barWidth) + shiftAdjustment + bearerwidth + iquietzone, 0);
                                 var endPoint = new Point((pos * barWidth) + shiftAdjustment + bearerwidth + iquietzone, Height);
-                                image.Mutate(c => c.DrawLines(pen, startPoint, endPoint));
+                                image.Mutate(c => c.DrawLine(pen, startPoint, endPoint));
                             }
 
                             pos++;
@@ -553,10 +553,10 @@ namespace AnyBarcode
                         // bearer bars
                         pen = Pens.Solid(ForeColor, ilHeight / 8f);
 
-                        image.Mutate(c => c.DrawLines(pen, new PointF(0, 0), new PointF(image.Width, 0))); // top
-                        image.Mutate(c => c.DrawLines(pen, new PointF(0, ilHeight), new PointF(image.Width, ilHeight))); // bottom
-                        image.Mutate(c => c.DrawLines(pen, new PointF(0, 0), new PointF(0, ilHeight))); // left
-                        image.Mutate(c => c.DrawLines(pen, new PointF(image.Width, 0), new PointF(image.Width, ilHeight))); // right
+                        image.Mutate(c => c.DrawLine(pen, new PointF(0, 0), new PointF(image.Width, 0))); // top
+                        image.Mutate(c => c.DrawLine(pen, new PointF(0, ilHeight), new PointF(image.Width, ilHeight))); // bottom
+                        image.Mutate(c => c.DrawLine(pen, new PointF(0, 0), new PointF(0, ilHeight))); // left
+                        image.Mutate(c => c.DrawLine(pen, new PointF(image.Width, 0), new PointF(image.Width, ilHeight))); // right
 
                         if (IncludeLabel)
                             LabelWriter.LabelITF14<TPixel>(this, image);
@@ -644,7 +644,7 @@ namespace AnyBarcode
                             {
                                 var startPoint = new PointF(pos * barWidth + shiftAdjustment + halfBarWidth, topLabelAdjustment);
                                 var endPoint = new PointF(pos * barWidth + shiftAdjustment + halfBarWidth, ilHeight + topLabelAdjustment);
-                                image.Mutate(c => c.DrawLines(options, pen, startPoint, endPoint));
+                                image.Mutate(c => c.DrawLine(options, pen, startPoint, endPoint));
                             }
 
                             pos++;
@@ -738,7 +738,7 @@ namespace AnyBarcode
                             {
                                 var startPoint = new PointF(pos * iBarWidth + shiftAdjustment + halfBarWidth, topLabelAdjustment);
                                 var endPoint = new PointF(pos * iBarWidth + shiftAdjustment + halfBarWidth, ilHeight + topLabelAdjustment);
-                                image.Mutate(c => c.DrawLines(pen, startPoint, endPoint));
+                                image.Mutate(c => c.DrawLine(pen, startPoint, endPoint));
                             }
 
                             pos++;
@@ -824,13 +824,13 @@ namespace AnyBarcode
                                 {
                                     var startPoint = new PointF(pos * iBarWidth + shiftAdjustment + halfBarWidth, ilHeight + topLabelAdjustment);
                                     var endPoint = new PointF(pos * iBarWidth + shiftAdjustment + halfBarWidth, (ilHeight / 2) + topLabelAdjustment);
-                                    image.Mutate(c => c.DrawLines(pen, startPoint, endPoint));
+                                    image.Mutate(c => c.DrawLine(pen, startPoint, endPoint));
                                 }
                                 else
                                 {
                                     var startPoint = new PointF(pos * iBarWidth + shiftAdjustment + halfBarWidth, ilHeight + topLabelAdjustment);
                                     var endPoint = new PointF(pos * iBarWidth + shiftAdjustment + halfBarWidth, topLabelAdjustment);
-                                    image.Mutate(c => c.DrawLines(pen, startPoint, endPoint));
+                                    image.Mutate(c => c.DrawLine(pen, startPoint, endPoint));
                                 }
                             }
                             else
@@ -839,7 +839,7 @@ namespace AnyBarcode
                                 {
                                     var startPoint = new PointF(pos * iBarWidth + shiftAdjustment + halfBarWidth, topLabelAdjustment);
                                     var endPoint = new PointF(pos * iBarWidth + shiftAdjustment + halfBarWidth, ilHeight + topLabelAdjustment);
-                                    image.Mutate(c => c.DrawLines(pen, startPoint, endPoint));
+                                    image.Mutate(c => c.DrawLine(pen, startPoint, endPoint));
                                 }
                             }
                             pos++;
